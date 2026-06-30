@@ -22,3 +22,12 @@
     -fx-padding: 10;
     -fx-font-size: 14;
 }
+
+.Input {
+    -fx-pref-width: 250;
+    -fx-padding: 5;
+}
+
+.combo-box > .list-cell {
+    -fx-text-fill: white; 
+}

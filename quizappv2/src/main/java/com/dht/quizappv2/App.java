@@ -18,7 +18,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("primary"));
+        scene = new Scene(loadFXML("questions"));
         stage.setScene(scene);
         stage.show();
     }
@@ -29,8 +29,6 @@ public class App extends Application {
         
         MyConnSingleton.getInstance().close();
     }
-    
-    
 
     static void setRoot(String fxml) throws IOException {
         scene.setRoot(loadFXML(fxml));
