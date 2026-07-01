@@ -4,6 +4,8 @@
  */
 package com.dht.services.question;
 
+import com.dht.pojo.Category;
+import com.dht.pojo.Level;
 import com.dht.pojo.Question;
 import com.dht.utils.MyConnSingleton;
 import java.sql.Connection;
@@ -18,11 +20,32 @@ import java.util.List;
  * @author admin
  */
 public class QuestionServices {
-    public List<Question> getQuestions() throws SQLException {
+    public List<Question> getQuestions(String kw, Category cate, Level lvl) throws SQLException {
         Connection conn = MyConnSingleton.getInstance().connect();
        
-        String sql = "SELECT * FROM question";
+        String sql = "SELECT * FROM question WHERE 1=1"; // ORDER BY id DESC
+        
+        
+        List<Object> params = new ArrayList<>();
+        if (kw != null && !kw.isEmpty()) {
+            sql += " content like concat('%', ?, '%')";
+            params.add(kw);
+        }
+        
+        if (cate != null) {
+            sql += " category_id = ?";
+            params.add(cate.getId());
+        }
+        
+        if (lvl != null) {
+            sql += " level_id = ?";
+            params.add(lvl.getId());
+        }
+        
         PreparedStatement stm = conn.prepareCall(sql);
+        for (int i = 0; i < params.size(); i++)
+            stm.setObject(i + 1, params.get(i));
+        
         ResultSet rs = stm.executeQuery();
 
         List<Question> questions = new ArrayList<>();

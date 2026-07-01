@@ -29,3 +29,15 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     -fx-padding: 10;
     -fx-font-size: 16;
 }
+
+.Input {
+    -fx-pref-width: 250;
+    -fx-padding: 10;
+}
+
+.combo-box .list-cell {
+    -fx-text-fill: white; 
+}
+.combo-box-popup .list-view .list-cell {
+    -fx-text-fill: darkblue; 
+}
