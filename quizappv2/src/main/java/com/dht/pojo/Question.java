@@ -68,6 +68,11 @@ public class Question {
             return this;
         }
         
+        public QuestionBuilder setChoices(List<Choice> choices) {
+            this.setChoices(choices);
+            return this;
+        }
+        
         public Question build() {
             return new Question(this);
         }

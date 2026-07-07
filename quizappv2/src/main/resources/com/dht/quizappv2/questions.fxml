@@ -48,10 +48,9 @@
       </HBox>
       <HBox prefHeight="59.0" prefWidth="627.0" styleClass="Container">
          <children>
-            <TextField />
+            <TextField fx:id="txtSearchText" />
             <ComboBox fx:id="cbSearchCates" prefWidth="150.0" />
             <ComboBox fx:id="cbSearchLevels" prefWidth="150.0" />
-            <Button mnemonicParsing="false" onAction="#searchQuestion" text="Tìm câu hỏi" />
          </children>
       </HBox>
       <TableView fx:id="tvQuestions" prefHeight="223.0" prefWidth="627.0" />
