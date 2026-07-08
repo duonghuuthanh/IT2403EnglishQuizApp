@@ -8,18 +8,11 @@ import com.dht.pojo.Category;
 import com.dht.pojo.Choice;
 import com.dht.pojo.Level;
 import com.dht.pojo.Question;
-import com.dht.services.CategoryServices;
-import com.dht.services.LevelServices;
-import com.dht.services.question.QuestionServices;
+import com.dht.pojo.QuestionQueryBuilder;
 import com.dht.utils.Configs;
 import com.dht.utils.MyAlertSingleton;
-import com.dht.utils.MyConnSingleton;
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -84,6 +77,16 @@ public class QuestionsController implements Initializable {
         }
         
         loadTableQuestions();
+        
+        this.txtKeywords.textProperty().addListener(e -> {
+            this.loadTableQuestions();
+        });
+        this.cbSearchCates.getSelectionModel().selectedItemProperty().addListener(e -> {
+            this.loadTableQuestions();
+        });
+        this.cbSearchLevels.getSelectionModel().selectedItemProperty().addListener(e -> {
+            this.loadTableQuestions();
+        });
     }
 
     private void loadColumns() {
@@ -141,11 +144,15 @@ public class QuestionsController implements Initializable {
     }
     
     private void loadTableQuestions() {
+        QuestionQueryBuilder query = new QuestionQueryBuilder()
+                            .withCategory(this.cbSearchCates.getSelectionModel().getSelectedItem())
+                            .withKeywords(this.txtKeywords.getText())
+                            .withLevel(this.cbSearchLevels.getSelectionModel().getSelectedItem());
+        
+        Configs.questionService.setQuery(query);
+        
         try {
-            
-            this.tvQuestions.setItems(FXCollections.observableList(Configs.questionService.getQuestions(this.txtKeywords.getText(), 
-                    this.cbSearchCates.getSelectionModel().getSelectedItem(), 
-                    this.cbSearchLevels.getSelectionModel().getSelectedItem())));
+            this.tvQuestions.setItems(FXCollections.observableList(Configs.questionService.getQuestions()));
         } catch (SQLException ex) {
             Logger.getLogger(QuestionsController.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }

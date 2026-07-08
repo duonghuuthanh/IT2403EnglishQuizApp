@@ -13,7 +13,7 @@
 
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="760.0" prefWidth="746.0" styleClass="Container" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dht.quizappv1.QuestionsController">
    <children>
-      <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="Subject" text="Quản lý câu hỏi" />
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="Subject" text="QUẢN LÝ CÂU HỎI" />
       <TextArea fx:id="txtContent" prefHeight="86.0" prefWidth="600.0" promptText="Nội dung câu hỏi..." />
       <HBox styleClass="Container">
          <children>
@@ -49,9 +49,9 @@
       </HBox>
       <HBox prefHeight="54.0" prefWidth="726.0" styleClass="Container">
          <children>
-            <TextField fx:id="txtKeywords" />
-            <ComboBox fx:id="cbSearchCates" prefWidth="150.0" />
-            <ComboBox fx:id="cbSearchLevels" prefWidth="150.0" />
+            <TextField fx:id="txtKeywords" styleClass="Input" />
+            <ComboBox fx:id="cbSearchCates" prefWidth="150.0" styleClass="Button" />
+            <ComboBox fx:id="cbSearchLevels" prefWidth="150.0" styleClass="Button" />
          </children>
       </HBox>
       <TableView fx:id="tvQuestions" prefHeight="238.0" prefWidth="726.0" />
