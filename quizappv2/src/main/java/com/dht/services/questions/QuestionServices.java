@@ -4,10 +4,9 @@
  */
 package com.dht.services.questions;
 
-import com.dht.pojo.Choice;
 import com.dht.pojo.Question;
 import com.dht.pojo.QuestionQueryBuilder;
-import com.dht.utils.MyConnSingleton;
+import com.dht.services.QueryServiceBase;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,7 +17,7 @@ import java.util.List;
  *
  * @author admin
  */
-public class QuestionServices extends QuestionServicesBase {
+public class QuestionServices extends QueryServiceBase<Question> implements QuestionServicesBase {
     private QuestionQueryBuilder query;
 
     public QuestionServices() {
@@ -29,10 +28,12 @@ public class QuestionServices extends QuestionServicesBase {
     }
     
     @Override
-    public List<Question> getQuestions() throws SQLException {
-        PreparedStatement stm = this.query.build();
-        ResultSet rs = stm.executeQuery();
-        
+    public PreparedStatement getStm() throws SQLException {
+        return this.query.build();
+    }
+
+    @Override
+    public List<Question> getResults(ResultSet rs) throws SQLException {
         List<Question> questions = new ArrayList<>();
         while (rs.next()) {
             questions.add(new Question.QuestionBuilder().setContent(rs.getString("content"))
@@ -41,11 +42,13 @@ public class QuestionServices extends QuestionServicesBase {
         
         return questions;
     }
-
+    
     /**
      * @param sql the sql to set
      */
     public void setQuery(QuestionQueryBuilder query) {
         this.query = query;
     }
+
+    
 }

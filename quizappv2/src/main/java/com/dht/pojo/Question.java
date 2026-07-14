@@ -19,6 +19,11 @@ public class Question {
     private Level level;
     private Category category;
     private List<Choice> choices;
+
+    @Override
+    public String toString() {
+        return this.content; // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+    }
     
     private Question(QuestionBuilder b) {
         this.id = b.id;

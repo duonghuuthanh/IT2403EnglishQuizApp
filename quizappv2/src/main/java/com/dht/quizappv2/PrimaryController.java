@@ -29,7 +29,7 @@ public class PrimaryController implements Initializable {
     }
     
     public void exam(ActionEvent e) {
-        MyAlertSingleton.getInstance().showAlert("Comming soon...");
+        MyStageSingleton.getInstance().showStage("exam");
     }
 
     public void changeTheme(ActionEvent e) {

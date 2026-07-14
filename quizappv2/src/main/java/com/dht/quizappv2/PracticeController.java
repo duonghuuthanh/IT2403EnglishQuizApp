@@ -8,6 +8,8 @@ import com.dht.pojo.Category;
 import com.dht.pojo.Level;
 import com.dht.pojo.Question;
 import com.dht.pojo.QuestionQueryBuilder;
+import com.dht.services.FlyweightFactory;
+import com.dht.services.questions.QuestionFacade;
 import com.dht.services.questions.QuestionServicesDecorator;
 import com.dht.utils.Configs;
 import com.dht.utils.MyAlertSingleton;
@@ -56,12 +58,8 @@ public class PracticeController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        try {
-            this.cbSearchCates.setItems(FXCollections.observableList(Configs.cateService.getCates()));
-            this.cbSearchLevels.setItems(FXCollections.observableList(Configs.lvlService.getLevels()));
-        } catch (SQLException ex) {
-            System.err.println(ex.getMessage());
-        }
+        this.cbSearchCates.setItems(FXCollections.observableList(FlyweightFactory.getData(Configs.cateService, Configs.CATE_KEY)));
+        this.cbSearchLevels.setItems(FXCollections.observableList(FlyweightFactory.getData(Configs.lvlService, Configs.LVL_KEY)));
     }
 
     public void start(ActionEvent e) {
@@ -69,10 +67,10 @@ public class PracticeController implements Initializable {
                 .setLimit(this.txtNum.getText()).setOrderBy("rand()")
                 .widthCategory(this.cbSearchCates.getSelectionModel().getSelectedItem())
                 .widthLevel(this.cbSearchLevels.getSelectionModel().getSelectedItem());
-        Configs.questionService.setQuery(b);
 
         try {
-            this.questions = new QuestionServicesDecorator(Configs.questionService).getQuestions();
+            this.questions = QuestionFacade.getLazyQuestions(b);
+            this.currentIdx = -1;
             this.loadQuestion(1);
         } catch (SQLException ex) {
             Logger.getLogger(PracticeController.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
@@ -86,17 +84,18 @@ public class PracticeController implements Initializable {
     public void previous(ActionEvent e) {
         this.loadQuestion(-1);
     }
-    
+
     public void checkAnswer(ActionEvent e) {
         Question q = this.questions.get(this.currentIdx);
-        
+
         for (int i = 0; i < this.vChoices.getChildren().size(); i++) {
-            RadioButton r = (RadioButton)this.vChoices.getChildren().get(i);
-            if (r.isSelected()){
-                if (q.getChoices().get(i).isCorrect() == true) 
+            RadioButton r = (RadioButton) this.vChoices.getChildren().get(i);
+            if (r.isSelected()) {
+                if (q.getChoices().get(i).isCorrect() == true) {
                     MyAlertSingleton.getInstance().showAlert("CHÍNH XÁC!!!");
-                else
+                } else {
                     MyAlertSingleton.getInstance().showAlert("SAI RỒI!!!", Alert.AlertType.ERROR);
+                }
                 break;
             }
         }

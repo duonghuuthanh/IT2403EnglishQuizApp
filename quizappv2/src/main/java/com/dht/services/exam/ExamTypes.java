@@ -2,16 +2,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.dht.services.questions;
-
-import com.dht.pojo.Question;
-import java.sql.SQLException;
-import java.util.List;
+package com.dht.services.exam;
 
 /**
  *
  * @author admin
  */
-public interface QuestionServicesBase {
-    List<Question> list() throws SQLException;
+public enum ExamTypes {
+    SPECIFIC, FIXED;
 }

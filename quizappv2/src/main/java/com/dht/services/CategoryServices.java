@@ -17,12 +17,17 @@ import java.util.List;
  *
  * @author admin
  */
-public class CategoryServices {
-    public List<Category> getCates() throws SQLException {
+public class CategoryServices extends QueryServiceBase<Category> {
+
+    @Override
+    public PreparedStatement getStm() throws SQLException {
         String sql = "SELECT * FROM category";
-        PreparedStatement stm = MyConnSingleton.getInstance().connect().prepareCall(sql);
-        ResultSet rs = stm.executeQuery();
-        
+        return MyConnSingleton.getInstance().connect().prepareCall(sql);
+    }
+    
+
+    @Override
+    public List<Category> getResults(ResultSet rs) throws SQLException {
         List<Category> cates = new ArrayList<>();
         while (rs.next()) {
             cates.add(new Category(rs.getInt("id"), rs.getString("name")));
