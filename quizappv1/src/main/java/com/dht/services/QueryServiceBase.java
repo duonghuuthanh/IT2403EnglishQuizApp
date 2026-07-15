@@ -4,7 +4,6 @@
  */
 package com.dht.services;
 
-import com.dht.pojo.Category;
 import com.dht.pojo.Level;
 import com.dht.utils.MyConnSingleton;
 import java.sql.Connection;
@@ -18,14 +17,19 @@ import java.util.List;
  *
  * @author admin
  */
-public class LevelServices extends QueryServiceBase<Level> {
-    @Override
-    public PreparedStatement getStm() throws SQLException {
-        return MyConnSingleton.getInstance().connect().prepareCall("SELECT * FROM level");
-    }
+public abstract class QueryServiceBase<T> {
+    public List<T> list() throws SQLException { // template method
+        PreparedStatement stm = this.getStm();
+        ResultSet rs = stm.executeQuery();
 
-    @Override
-    public Level getObject(ResultSet rs) throws SQLException {
-        return new Level(rs.getInt("id"), rs.getString("name"));
+        List<T> results = new ArrayList<>();
+        while (rs.next()) {
+            results.add(this.getObject(rs));
+        }
+
+        return results;
     }
+    
+    public abstract PreparedStatement getStm() throws SQLException;
+    public abstract T getObject(ResultSet rs) throws SQLException;
 }

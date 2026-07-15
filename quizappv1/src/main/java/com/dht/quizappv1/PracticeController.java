@@ -8,6 +8,8 @@ import com.dht.pojo.Category;
 import com.dht.pojo.Level;
 import com.dht.pojo.Question;
 import com.dht.pojo.QuestionQueryBuilder;
+import com.dht.services.FlyweightFactory;
+import com.dht.services.question.QuestionFacade;
 import com.dht.services.question.QuestionServiceDecorator;
 import com.dht.utils.Configs;
 import com.dht.utils.MyAlertSingleton;
@@ -56,13 +58,8 @@ public class PracticeController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        try {
-            this.cbSearchCates.setItems(FXCollections.observableList(Configs.cateService.getCates()));
-            this.cbSearchLevels.setItems(FXCollections.observableList(Configs.lvlService.getLevels()));
-
-        } catch (SQLException ex) {
-
-        }
+            this.cbSearchCates.setItems(FXCollections.observableList(FlyweightFactory.getData(Configs.cateService, Configs.CATE_KEY)));
+            this.cbSearchLevels.setItems(FXCollections.observableList(FlyweightFactory.getData(Configs.lvlService, Configs.LVL_KEY)));
     }
 
     public void start(ActionEvent e) {
@@ -72,9 +69,9 @@ public class PracticeController implements Initializable {
                 .setOrderBy(" rand() ")
                 .setLimit(this.txtNum.getText());
 
-        Configs.questionService.setQuery(query);
+        
         try {
-            this.questions = new QuestionServiceDecorator(Configs.questionService).getQuestions();
+            this.questions = QuestionFacade.getLazyQuestions(query);
             this.showQuestion(1);
         } catch (SQLException ex) {
             Logger.getLogger(PracticeController.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);

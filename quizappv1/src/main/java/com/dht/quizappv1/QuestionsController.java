@@ -9,6 +9,8 @@ import com.dht.pojo.Choice;
 import com.dht.pojo.Level;
 import com.dht.pojo.Question;
 import com.dht.pojo.QuestionQueryBuilder;
+import com.dht.services.FlyweightFactory;
+import com.dht.services.question.QuestionFacade;
 import com.dht.utils.Configs;
 import com.dht.utils.MyAlertSingleton;
 import java.net.URL;
@@ -56,8 +58,10 @@ public class QuestionsController implements Initializable {
     private VBox vChoices;
     @FXML
     private TextArea txtContent;
-    @FXML private ToggleGroup toggle;
-    @FXML private TextField txtKeywords;
+    @FXML
+    private ToggleGroup toggle;
+    @FXML
+    private TextField txtKeywords;
 
     /**
      * Initializes the controller class.
@@ -66,18 +70,14 @@ public class QuestionsController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
 
         this.loadColumns();
-        try {
-            this.cbCates.setItems(FXCollections.observableList(Configs.cateService.getCates()));
-            this.cbLevels.setItems(FXCollections.observableList(Configs.lvlService.getLevels()));
-            this.cbSearchCates.setItems(FXCollections.observableList(Configs.cateService.getCates()));
-            this.cbSearchLevels.setItems(FXCollections.observableList(Configs.lvlService.getLevels()));
-            
-        } catch (SQLException ex) {
 
-        }
-        
+        this.cbCates.setItems(FXCollections.observableList(FlyweightFactory.getData(Configs.cateService, Configs.CATE_KEY)));
+        this.cbLevels.setItems(FXCollections.observableList(FlyweightFactory.getData(Configs.lvlService, Configs.LVL_KEY)));
+        this.cbSearchCates.setItems(FXCollections.observableList(FlyweightFactory.getData(Configs.cateService, Configs.CATE_KEY)));
+        this.cbSearchLevels.setItems(FXCollections.observableList(FlyweightFactory.getData(Configs.lvlService, Configs.LVL_KEY)));
+
         loadTableQuestions();
-        
+
         this.txtKeywords.textProperty().addListener(e -> {
             this.loadTableQuestions();
         });
@@ -142,17 +142,15 @@ public class QuestionsController implements Initializable {
             MyAlertSingleton.getInstance().showMsg("Thêm câu hỏi thất bại, do: " + ex.getMessage(), Alert.AlertType.ERROR);
         }
     }
-    
+
     private void loadTableQuestions() {
         QuestionQueryBuilder query = new QuestionQueryBuilder()
-                            .withCategory(this.cbSearchCates.getSelectionModel().getSelectedItem())
-                            .withKeywords(this.txtKeywords.getText())
-                            .withLevel(this.cbSearchLevels.getSelectionModel().getSelectedItem());
-        
-        Configs.questionService.setQuery(query);
-        
+                .withCategory(this.cbSearchCates.getSelectionModel().getSelectedItem())
+                .withKeywords(this.txtKeywords.getText())
+                .withLevel(this.cbSearchLevels.getSelectionModel().getSelectedItem());
+
         try {
-            this.tvQuestions.setItems(FXCollections.observableList(Configs.questionService.getQuestions()));
+            this.tvQuestions.setItems(FXCollections.observableList(QuestionFacade.getQuestions(query)));
         } catch (SQLException ex) {
             Logger.getLogger(QuestionsController.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }

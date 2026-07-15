@@ -54,6 +54,15 @@ public class QuestionQueryBuilder {
         return this;
     }
     
+    public QuestionQueryBuilder withLevel(int lvlId) {
+        if (lvlId > 0) {
+            this.where.append(" AND level_id = ?");
+            this.params.add(lvlId);
+        }
+        
+        return this;
+    }
+    
     public QuestionQueryBuilder setOrderBy(String orderBy) {
         this.orderBy = orderBy;
         return this;
